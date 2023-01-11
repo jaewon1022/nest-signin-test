@@ -26,28 +26,32 @@ datasource db {
 //   authorId  Int?
 // }
 
-model users {
+model User {
   user_id Int @unique @default(autoincrement()) @id
   email String @unique @db.VarChar(199)
   password String @db.VarChar(199)
-  wallets wallets[]
-  transactions transactions[]
+  wallets Wallet[]
+  transactions Transaction[]
   created_at DateTime @default(now())
   updated_at DateTime @default(now())
+
+  @@map("users")
 }
 
-model wallets {
+model Wallet {
   id Int @default(autoincrement()) @id
-  userId users @relation(fields: [user_id], references: [user_id])
+  userId User @relation(fields: [user_id], references: [user_id])
   user_id Int
   account_address String @unique @db.Char(42)
   balance Int @default(0)
   created_at DateTime @default(now())
+
+  @@map("wallets")
 }
 
-model transactions {
+model Transaction {
   transaction_id Int @default(autoincrement()) @id @unique
-  user users @relation(fields: [user_id], references: [user_id])
+  user User @relation(fields: [user_id], references: [user_id])
   user_id Int
   transaction_status String @db.VarChar(45)
   from String @db.Char(42)
@@ -55,9 +59,13 @@ model transactions {
   amount Int
   transaction_hash String @unique @db.VarChar(45)
   created_at DateTime @default(now())
+
+  @@map("transactions")
 }
 
-model transaction_status {
+model Transaction_Status {
   id Int @default(autoincrement()) @id
   transaction_status String @db.VarChar(45)
+
+  @@map("transaction_status")
 }

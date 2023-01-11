@@ -1,29 +1,29 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
-import { users, Prisma } from '@prisma/client';
+import { User, Prisma } from '@prisma/client';
 import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class UserService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async getUsers(): Promise<users[]> {
-    const searchedData = await this.prisma.users.findMany();
+  async getUsers(): Promise<User[]> {
+    const searchedData = await this.prisma.user.findMany();
 
     if (searchedData.length > 0) {
-      return this.prisma.users.findMany();
+      return this.prisma.user.findMany();
     } else {
       throw new NotFoundException('조회할 수 있는 유저가 없습니다.');
     }
   }
 
-  async getUser(where: Prisma.usersWhereUniqueInput): Promise<users> {
-    const foundData = await this.prisma.users.findUnique({
+  async getUser(where: Prisma.UserWhereUniqueInput): Promise<User> {
+    const foundData = await this.prisma.user.findUnique({
       where,
     });
 
     if (foundData) {
-      return this.prisma.users.findUnique({
+      return this.prisma.user.findUnique({
         where,
       });
     } else {
@@ -32,17 +32,17 @@ export class UserService {
   }
 
   async updatePassword(params: {
-    where: Prisma.usersWhereUniqueInput;
-    data: Prisma.usersUpdateInput;
-  }): Promise<users> {
-    const user = await this.prisma.users.findUnique({
+    where: Prisma.UserWhereUniqueInput;
+    data: Prisma.UserUpdateInput;
+  }): Promise<User> {
+    const user = await this.prisma.user.findUnique({
       where: params.where,
     });
 
     if (user) {
       const hashedPassword = await bcrypt.hash(params.data.password, 10);
 
-      return this.prisma.users.update({
+      return this.prisma.user.update({
         where: params.where,
         data: {
           password: hashedPassword,
@@ -53,12 +53,12 @@ export class UserService {
     }
   }
 
-  async deleteUser(where: Prisma.usersWhereUniqueInput): Promise<users> {
-    const user = await this.prisma.users.findUnique({
+  async deleteUser(where: Prisma.UserWhereUniqueInput): Promise<User> {
+    const user = await this.prisma.user.findUnique({
       where,
     });
     if (user) {
-      return this.prisma.users.delete({
+      return this.prisma.user.delete({
         where,
       });
     } else {
