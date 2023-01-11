@@ -1,31 +1,44 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { User, Prisma } from '@prisma/client';
+import { NonPWUser } from 'src/@types/user';
 import * as argon2 from 'argon2';
 
 @Injectable()
 export class UserService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async getUsers(): Promise<User[]> {
-    const searchedData = await this.prisma.user.findMany();
+  async getUsers(): Promise<NonPWUser[]> {
+    const searchedData = await this.prisma.user.findMany({
+      select: {
+        user_id: true,
+        email: true,
+        created_at: true,
+        updated_at: true,
+      },
+      orderBy: { created_at: 'desc' },
+    });
 
     if (searchedData.length > 0) {
-      return this.prisma.user.findMany();
+      return searchedData;
     } else {
       throw new NotFoundException('조회할 수 있는 유저가 없습니다.');
     }
   }
 
-  async getUser(where: Prisma.UserWhereUniqueInput): Promise<User> {
+  async getUser(where: Prisma.UserWhereUniqueInput): Promise<NonPWUser> {
     const foundData = await this.prisma.user.findUnique({
       where,
+      select: {
+        user_id: true,
+        email: true,
+        created_at: true,
+        updated_at: true,
+      },
     });
 
     if (foundData) {
-      return this.prisma.user.findUnique({
-        where,
-      });
+      return foundData;
     } else {
       throw new NotFoundException('존재하지 않는 유저를 조회했습니다.');
     }

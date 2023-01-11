@@ -1,6 +1,7 @@
 import { Body, Controller, Delete, Get, Param, Patch } from '@nestjs/common';
 import { UserService } from './user.service';
-import { User as UserModel } from '@prisma/client';
+// import { User as UserModel } from '@prisma/client';
+import { NonPWUser } from 'src/@types/user';
 import { UpdateUserDto } from './dto/update-user.dto';
 
 @Controller('users')
@@ -8,7 +9,8 @@ export class UserController {
   constructor(private readonly userService: UserService) {}
 
   @Get()
-  async getUsers(): Promise<UserModel[]> {
+  async getUsers(): Promise<NonPWUser[]> {
+    // async getUsers(): Promise<UserModel[]> {
     return this.userService.getUsers();
   }
 
