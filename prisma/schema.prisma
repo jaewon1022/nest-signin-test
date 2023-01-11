@@ -1,0 +1,63 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// model User {
+//   id    Int      @default(autoincrement()) @id
+//   email String   @unique
+//   name  String?
+//   posts Post[]
+// }
+
+// model Post {
+//   id        Int      @default(autoincrement()) @id
+//   title     String
+//   content   String?
+//   published Boolean? @default(false)
+//   author    User?    @relation(fields: [authorId], references: [id])
+//   authorId  Int?
+// }
+
+model users {
+  user_id Int @unique @default(autoincrement()) @id
+  email String @unique @db.VarChar(199)
+  password String @db.VarChar(199)
+  wallets wallets[]
+  transactions transactions[]
+  created_at DateTime @default(now())
+  updated_at DateTime @default(now())
+}
+
+model wallets {
+  id Int @default(autoincrement()) @id
+  userId users @relation(fields: [user_id], references: [user_id])
+  user_id Int
+  account_address String @unique @db.Char(42)
+  balance Int @default(0)
+  created_at DateTime @default(now())
+}
+
+model transactions {
+  transaction_id Int @default(autoincrement()) @id @unique
+  user users @relation(fields: [user_id], references: [user_id])
+  user_id Int
+  transaction_status String @db.VarChar(45)
+  from String @db.Char(42)
+  to String @db.Char(42)
+  amount Int
+  transaction_hash String @unique @db.VarChar(45)
+  created_at DateTime @default(now())
+}
+
+model transaction_status {
+  id Int @default(autoincrement()) @id
+  transaction_status String @db.VarChar(45)
+}
