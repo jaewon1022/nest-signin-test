@@ -8,7 +8,13 @@ export class UserService {
   constructor(private readonly prisma: PrismaService) {}
 
   async getUsers(): Promise<users[]> {
-    return this.prisma.users.findMany();
+    const searchedData = await this.prisma.users.findMany();
+
+    if (searchedData.length > 0) {
+      return this.prisma.users.findMany();
+    } else {
+      throw new NotFoundException('조회할 수 있는 유저가 없습니다.');
+    }
   }
 
   async getUser(where: Prisma.usersWhereUniqueInput): Promise<users> {
