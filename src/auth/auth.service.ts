@@ -7,6 +7,7 @@ import { User } from '@prisma/client';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateUserDto } from 'src/user/dto/create-user.dto';
 import * as bcrypt from 'bcrypt';
+// import * as argon2 from 'argon2';
 
 @Injectable()
 export class AuthService {
@@ -19,6 +20,7 @@ export class AuthService {
 
     if (user) {
       const isMatch = await bcrypt.compare(password, user.password);
+      //   const isMatch = await argon2.verify(user.password, password);
 
       if (isMatch) {
         return user;
@@ -42,7 +44,10 @@ export class AuthService {
     });
 
     if (!userExists) {
+      console.log(data.password);
       const hashedPassword = await bcrypt.hash(data.password, 10);
+      //   const hashedPassword = await argon2.hash(data.password);
+      console.log(hashedPassword);
 
       return this.prisma.user.create({
         data: {
