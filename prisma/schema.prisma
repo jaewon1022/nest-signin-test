@@ -28,10 +28,10 @@ datasource db {
 
 model users {
   user_id Int @unique @default(autoincrement()) @id
-  email String @unique 
-  password String
+  email String @unique @db.VarChar(199)
+  password String @db.VarChar(199)
   wallets wallets[]
-  // transactions transactions[]
+  transactions transactions[]
   created_at DateTime @default(now())
   updated_at DateTime @default(now())
 }
@@ -40,25 +40,24 @@ model wallets {
   id Int @default(autoincrement()) @id
   userId users @relation(fields: [user_id], references: [user_id])
   user_id Int
-  account_address String @unique @default(cuid())
+  account_address String @unique @db.Char(42)
   balance Int @default(0)
   created_at DateTime @default(now())
 }
 
-// model transactions {
-//   transaction_id Int @default(autoincrement()) @id @unique
-//   userId users @relation(fields: [user_id], references: [user_id])
-//   user_id Int
-  // transactionStatus transaction_status @relation(fields: [transaction_status_id], references: [transaction_status_id])
-  // transaction_status_id string[]
-//   from String
-//   to String
-//   amount Int
-//   transaction_hash String @unique
-//   created_at DateTime @default(now())
-// }
+model transactions {
+  transaction_id Int @default(autoincrement()) @id @unique
+  user users @relation(fields: [user_id], references: [user_id])
+  user_id Int
+  transaction_status String @db.VarChar(45)
+  from String @db.Char(42)
+  to String @db.Char(42)
+  amount Int
+  transaction_hash String @unique @db.VarChar(45)
+  created_at DateTime @default(now())
+}
 
-// model transaction_status {
-//   transaction_status_id Int @default(autoincrement()) @id @unique
-//   transaction_status transactions[] @relation(fields: [transaction_status_id], references: [transaction_id])
-// }
+model transaction_status {
+  id Int @default(autoincrement()) @id
+  transaction_status String @db.VarChar(45)
+}

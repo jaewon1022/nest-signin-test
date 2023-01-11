@@ -1,4 +1,8 @@
-import { ConflictException, Injectable } from '@nestjs/common';
+import {
+  ConflictException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { users, Prisma } from '@prisma/client';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -8,10 +12,17 @@ export class UserService {
   constructor(private readonly prisma: PrismaService) {}
 
   async getUser(where: Prisma.usersWhereUniqueInput): Promise<users> {
-    console.log('where: ', where);
-    return this.prisma.users.findUnique({
+    const foundData = await this.prisma.users.findUnique({
       where,
     });
+
+    if (foundData) {
+      return this.prisma.users.findUnique({
+        where,
+      });
+    } else {
+      throw new NotFoundException(`존재하지 않는 유저를 조회했습니다.`);
+    }
   }
 
   async getUsers(): Promise<users[]> {
