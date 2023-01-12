@@ -1,7 +1,7 @@
 import { ConflictException, Injectable } from '@nestjs/common';
 import { User } from '@prisma/client';
-import { PrismaService } from 'src/prisma/prisma.service';
-import { CreateUserDto } from 'src/user/dto/create-user.dto';
+import { PrismaService } from '../prisma/prisma.service';
+import { CreateUserDto } from '../user/dto/create-user.dto';
 import * as argon2 from 'argon2';
 
 @Injectable()
@@ -20,7 +20,6 @@ export class AuthService {
         return user;
       }
     }
-    console.log('guard error! 매칭되는 유저가 없습니다.');
 
     return null;
   }
