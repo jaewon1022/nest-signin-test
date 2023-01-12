@@ -5,11 +5,12 @@ import {
   Injectable,
 } from '@nestjs/common';
 import { Observable } from 'rxjs';
-import { PrismaService } from 'src/prisma/prisma.service';
 import { AuthService } from '../auth.service';
 
 @Injectable()
 export class RegisterGuard implements CanActivate {
+  constructor(private authService: AuthService) {}
+
   canActivate(
     context: ExecutionContext,
   ): boolean | Promise<boolean> | Observable<boolean> {
@@ -20,10 +21,8 @@ export class RegisterGuard implements CanActivate {
 
   private async validateRequest(request) {
     const { email } = request.body;
-    const prisma = new PrismaService();
-    const authService = new AuthService(prisma);
 
-    const isExist = await authService.validateUserExist(email);
+    const isExist = await this.authService.validateUserExist(email);
 
     if (isExist) {
       throw new ConflictException('이미 존재하는 이메일입니다.');
