@@ -14,6 +14,7 @@ export class AuthController {
     return this.authService.login(data);
   }
 
+  @UseGuards(AuthGuard('check'))
   @Post('register')
   async signupUser(@Body() data: CreateUserDto): Promise<UserModel> {
     return this.authService.register(data);

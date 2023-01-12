@@ -14,8 +14,6 @@ export class LocalStrategy extends PassportStrategy(Strategy, 'local') {
   }
 
   async validate(email: string, password: string): Promise<User> {
-    console.log('로그인 전 인증 시작');
-
     const user = await this.authService.validateUser(email, password);
 
     if (!user) {

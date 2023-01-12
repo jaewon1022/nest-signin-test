@@ -13,7 +13,6 @@ export class CheckStrategy extends PassportStrategy(Strategy, 'check') {
   }
 
   async validate(email: string): Promise<boolean> {
-    console.log('회원가입 전 이메일 검증 시작');
     const isExist = await this.authService.validateUserExist(email);
 
     if (isExist) {
