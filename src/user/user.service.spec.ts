@@ -18,4 +18,16 @@ describe('UserService', () => {
   it('should be defined', () => {
     expect(service).toBeDefined();
   });
+
+  describe('getUsers()', () => {
+    it('return user arrays', async () => {
+      const result = await service.getUsers();
+
+      expect(result).toBeInstanceOf(Array);
+    });
+  });
+  // describe('getUser()', () => {});
+  // describe('createUser()', () => {});
+  // describe('updatePassword()', () => {});
+  // describe('deleteUser()', () => {});
 });
