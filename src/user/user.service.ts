@@ -26,23 +26,48 @@ export class UserService {
     }
   }
 
-  async getUser(where: Prisma.UserWhereUniqueInput): Promise<NonPWUser> {
-    const foundData = await this.prisma.user.findUnique({
-      where,
-      select: {
-        user_id: true,
-        email: true,
-        created_at: true,
-        updated_at: true,
-      },
-    });
+  async getUser(email: string): Promise<NonPWUser> {
+    if (email) {
+      const foundData = await this.prisma.user.findUnique({
+        where: { email },
+        select: {
+          user_id: true,
+          email: true,
+          created_at: true,
+          updated_at: true,
+        },
+      });
 
-    if (foundData) {
-      return foundData;
+      if (foundData) {
+        return foundData;
+      } else {
+        throw new NotFoundException('존재하지 않는 유저를 조회했습니다.');
+      }
     } else {
-      throw new NotFoundException('존재하지 않는 유저를 조회했습니다.');
+      throw new NotFoundException('이메일을 입력해주세요.');
     }
   }
+
+  // // 기존 코드 (user_id로 조회)
+  // async getUser(where: Prisma.UserWhereUniqueInput): Promise<NonPWUser> {
+  //   const foundData = await this.prisma.user.findUnique({
+  //     where,
+  //     select: {
+  //       user_id: true,
+  //       email: true,
+  //       created_at: true,
+  //       updated_at: true,
+  //     },
+  //   });
+
+  //   console.log('foundData : ', foundData);
+
+  //   if (foundData) {
+  //     return foundData;
+  //   } else {
+  //     throw new NotFoundException('존재하지 않는 유저를 조회했습니다.');
+  //   }
+  // }
 
   async updatePassword(params: {
     where: Prisma.UserWhereUniqueInput;
