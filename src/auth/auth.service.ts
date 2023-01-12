@@ -8,11 +8,11 @@ import * as argon2 from 'argon2';
 export class AuthService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async validateUserExist(email: string): Promise<User> {
+  async validateUserExist(email: string): Promise<boolean> {
     const user = await this.prisma.user.findUnique({
       where: { email },
     });
-    if (user) return user;
+    if (user) return true;
     return null;
   }
 

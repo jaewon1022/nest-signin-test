@@ -3,6 +3,7 @@ import { CreateUserDto } from '../user/dto/create-user.dto';
 import { AuthService } from './auth.service';
 import { User as UserModel } from '@prisma/client';
 import { AuthGuard } from '@nestjs/passport';
+import { RegisterGuard } from './guard/register.guard';
 
 @Controller('auth')
 export class AuthController {
@@ -14,7 +15,7 @@ export class AuthController {
     return this.authService.login(data);
   }
 
-  @UseGuards(AuthGuard('check'))
+  @UseGuards(RegisterGuard)
   @Post('register')
   async signupUser(@Body() data: CreateUserDto): Promise<UserModel> {
     return this.authService.register(data);
