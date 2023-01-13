@@ -14,6 +14,8 @@ model User {
   user_id Int @unique @default(autoincrement()) @id
   email String @unique @db.VarChar(199)
   password String @db.VarChar(199)
+  access_token String? @unique @db.VarChar(199)
+  refresh_token String? @unique @db.VarChar(199)
   wallets Wallet[]
   transactions Transaction[]
   created_at DateTime @default(now())
