@@ -48,27 +48,6 @@ export class UserService {
     }
   }
 
-  // // 기존 코드 (user_id로 조회)
-  // async getUser(where: Prisma.UserWhereUniqueInput): Promise<NonPWUser> {
-  //   const foundData = await this.prisma.user.findUnique({
-  //     where,
-  //     select: {
-  //       user_id: true,
-  //       email: true,
-  //       created_at: true,
-  //       updated_at: true,
-  //     },
-  //   });
-
-  //   console.log('foundData : ', foundData);
-
-  //   if (foundData) {
-  //     return foundData;
-  //   } else {
-  //     throw new NotFoundException('존재하지 않는 유저를 조회했습니다.');
-  //   }
-  // }
-
   async updatePassword(params: {
     where: Prisma.UserWhereUniqueInput;
     data: Prisma.UserUpdateInput;

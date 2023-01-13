@@ -3,10 +3,14 @@ import { User } from '@prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateUserDto } from '../user/dto/create-user.dto';
 import * as argon2 from 'argon2';
+import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
 export class AuthService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly jwtService: JwtService,
+  ) {}
 
   async validateUserExist(email: string): Promise<boolean> {
     const user = await this.prisma.user.findUnique({
@@ -37,6 +41,8 @@ export class AuthService {
       where: { email: data.email },
     });
 
+    const payload = { email: user.email, sub: user.user_id };
+    console.log({ accessToken: this.jwtService.sign(payload) });
     return user;
   }
 
