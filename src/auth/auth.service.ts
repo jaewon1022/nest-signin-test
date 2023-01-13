@@ -16,7 +16,7 @@ export class AuthService {
     return null;
   }
 
-  async validateUser(email, password): Promise<User> {
+  async validateUser(email: string, password: string): Promise<User> {
     const user = await this.prisma.user.findUnique({
       where: { email },
     });
@@ -48,6 +48,5 @@ export class AuthService {
         password: hashedPassword,
       },
     });
-    return;
   }
 }
