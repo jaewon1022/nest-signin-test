@@ -15,6 +15,7 @@ export class UserService {
         email: true,
         created_at: true,
         updated_at: true,
+        access_token: true,
       },
       orderBy: { created_at: 'desc' },
     });
@@ -35,6 +36,7 @@ export class UserService {
           email: true,
           created_at: true,
           updated_at: true,
+          access_token: true,
         },
       });
 
