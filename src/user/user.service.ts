@@ -6,10 +6,10 @@ import * as argon2 from 'argon2';
 
 @Injectable()
 export class UserService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(private readonly prismaService: PrismaService) {}
 
   async getUsers(): Promise<NonPWUser[]> {
-    const searchedData = await this.prisma.user.findMany({
+    const searchedData = await this.prismaService.user.findMany({
       select: {
         user_id: true,
         email: true,
@@ -29,7 +29,7 @@ export class UserService {
 
   async getUser(email: string): Promise<NonPWUser> {
     if (email) {
-      const foundData = await this.prisma.user.findUnique({
+      const foundData = await this.prismaService.user.findUnique({
         where: { email },
         select: {
           user_id: true,
@@ -54,14 +54,14 @@ export class UserService {
     where: Prisma.UserWhereUniqueInput;
     data: Prisma.UserUpdateInput;
   }): Promise<User> {
-    const user = await this.prisma.user.findUnique({
+    const user = await this.prismaService.user.findUnique({
       where: params.where,
     });
 
     if (user) {
       const hashedPassword = await argon2.hash(`${params.data.password}`);
 
-      return this.prisma.user.update({
+      return this.prismaService.user.update({
         where: params.where,
         data: {
           password: hashedPassword,
@@ -73,11 +73,11 @@ export class UserService {
   }
 
   async deleteUser(where: Prisma.UserWhereUniqueInput): Promise<User> {
-    const user = await this.prisma.user.findUnique({
+    const user = await this.prismaService.user.findUnique({
       where,
     });
     if (user) {
-      return this.prisma.user.delete({
+      return this.prismaService.user.delete({
         where,
       });
     } else {
