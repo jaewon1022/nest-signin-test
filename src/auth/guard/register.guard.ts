@@ -1,5 +1,4 @@
 import {
-  BadRequestException,
   CanActivate,
   ConflictException,
   ExecutionContext,
@@ -23,20 +22,12 @@ export class RegisterGuard implements CanActivate {
   private async validateRequest(request) {
     const { email } = request.body;
 
-    // // 이메일 형식이 맞는지 확인
-    // const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
-
-    // const isEmail = emailRegex.test(email);
-
-    // if (isEmail) {
     const isExist = await this.authService.validateUserExist(email);
 
     if (isExist) {
       throw new ConflictException('이미 존재하는 이메일입니다.');
     }
-    // } else {
-    //   throw new BadRequestException('이메일 형식이 올바르지 않습니다.');
-    // }
+
     return request;
   }
 }
